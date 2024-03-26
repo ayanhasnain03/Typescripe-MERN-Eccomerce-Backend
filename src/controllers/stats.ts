@@ -6,16 +6,11 @@ import { User } from "../models/user.js";
 import {
   calculatePercentage,
   getChartData,
-  getInventries
+  getInventories,
 } from "../utils/features.js";
 
 export const getDashboardStats = TryCatch(async (req, res, next) => {
   let stats = {};
-
-  const key = "admin-stats";
-
-  if (myCache.has(key)) stats = JSON.parse(myCache.get(key) as string);
-  else {
     const today = new Date();
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -161,7 +156,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       }
     });
 
-    const categoryCount = await getInventries({
+    const categoryCount = await getInventories({
       categories,
       productsCount,
     });
@@ -190,10 +185,6 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       userRatio,
       latestTransaction: modifiedLatestTransaction,
     };
-
-    myCache.set(key, JSON.stringify(stats));
-  }
-
   return res.status(200).json({
     success: true,
     stats,
@@ -202,10 +193,9 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
 
 export const getPieCharts = TryCatch(async (req, res, next) => {
   let charts;
-  const key = "admin-pie-charts";
+  
 
-  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
-  else {
+ 
     const allOrderPromise = Order.find({}).select([
       "total",
       "discount",
@@ -244,7 +234,7 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
       delivered: deliveredOrder,
     };
 
-    const productCategories = await getInventries({
+    const productCategories = await getInventories({
       categories,
       productsCount,
     });
@@ -304,8 +294,7 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
       adminCustomer,
     };
 
-    myCache.set(key, JSON.stringify(charts));
-  }
+
 
   return res.status(200).json({
     success: true,
@@ -315,10 +304,9 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
 
 export const getBarCharts = TryCatch(async (req, res, next) => {
   let charts;
-  const key = "admin-bar-charts";
+ 
 
-  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
-  else {
+  
     const today = new Date();
 
     const sixMonthsAgo = new Date();
@@ -364,9 +352,6 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
       orders: ordersCounts,
     };
 
-    myCache.set(key, JSON.stringify(charts));
-  }
-
   return res.status(200).json({
     success: true,
     charts,
@@ -375,10 +360,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
 
 export const getLineCharts = TryCatch(async (req, res, next) => {
   let charts;
-  const key = "admin-line-charts";
-
-  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
-  else {
+  
     const today = new Date();
 
     const twelveMonthsAgo = new Date();
@@ -419,8 +401,7 @@ export const getLineCharts = TryCatch(async (req, res, next) => {
       revenue,
     };
 
-    myCache.set(key, JSON.stringify(charts));
-  }
+  
 
   return res.status(200).json({
     success: true,

@@ -60,35 +60,34 @@ export const reduceStock = async (orderItems: OrderItemType[]) => {
 };
 
 export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
-  if (lastMonth === 0) return thisMonth * 100; // this for because when last moth zero then output undefined
-  const percent = ((thisMonth - lastMonth) / lastMonth) * 100;
+  if (lastMonth === 0) return thisMonth * 100;
+  const percent = (thisMonth / lastMonth) * 100;
   return Number(percent.toFixed(0));
 };
 
-export const getInventries = async ({
+export const getInventories = async ({
   categories,
-  productsCount
+  productsCount,
 }: {
-  categories: string[];productsCount:number;
+  categories: string[];
+  productsCount: number;
 }) => {
   const categoriesCountPromise = categories.map((category) =>
     Product.countDocuments({ category })
   );
 
-  const categoiriesCount = await Promise.all(categoriesCountPromise);
+  const categoriesCount = await Promise.all(categoriesCountPromise);
 
   const categoryCount: Record<string, number>[] = [];
 
   categories.forEach((category, i) => {
     categoryCount.push({
-      [category]: Math.round((categoiriesCount[i] / productsCount) * 100),
+      [category]: Math.round((categoriesCount[i] / productsCount) * 100),
     });
   });
-  return categoryCount
+
+  return categoryCount;
 };
-
-
-
 
 interface MyDocument extends Document {
   createdAt: Date;
