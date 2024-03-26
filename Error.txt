@@ -1,0 +1,3 @@
+face error when install typescript 
+Error: Because My Powershell on restricted mode
+"Set-ExecutionPolicy Unrestricted -Scope CurrentUser"  use this command for Unrestrict
